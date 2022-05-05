@@ -12,6 +12,8 @@
 const btn = document.querySelector(".btn")
 const input = document.querySelector("#input")
 const temp = document.querySelector(".temp");
+const I = document.querySelector(".IN")
+
 function getData(city){
     NewApi ='ebdeb6e2f96448af00886a1f95c65b5f'
 
@@ -48,5 +50,12 @@ if(city){
 input.value = "";
 })
 
+I.addEventListener("keyup", function(event){
+    if(event.key == "Enter"){
+        getData(input.value)
+         input.value = ""
+    }
+   
+})
 
 
