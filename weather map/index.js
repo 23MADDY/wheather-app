@@ -9,10 +9,15 @@
 //}
 
 //getWeeatherByLoc("Nepal")
-const btn = document.querySelector(".btn")
 const input = document.querySelector("#input")
-const temp = document.querySelector(".temp");
-const I = document.querySelector(".IN")
+const btn = document.querySelector("#btn")
+const I =  document.querySelector(".IN")
+const DisplayTemp = document.querySelector("#DisplayTemp")
+const placeName = document.querySelector("#place")
+const DisplayWeatherStatus = document.querySelector(".small")
+const humCal = document.querySelector("#Humidity")
+const WindSpeed = document.querySelector("#WindSpeed")
+const Pressure = document.querySelector("#Pressure")
 
 function getData(city){
     NewApi ='ebdeb6e2f96448af00886a1f95c65b5f'
@@ -22,16 +27,45 @@ function getData(city){
  fetch(url).then((response) => {
      return response.json();
  }).then((data)  => {
-     console.log(data);
-     const tempOflocation = kToC(data.main.temp)
-     const minTempOfLocation = kToC(data.main.temp_min)
-     console.log(minTempOfLocation)
-        console.log(tempOflocation);
-        temp.innerText = `${tempOflocation} .C`
 
+    FetchData(data)
  })
   
 }
+
+
+function FetchData(data){
+    console.log(data);
+     
+    const ErrThrow = data.cod
+    console.log(ErrThrow)
+    const CName = data.name
+    
+    
+    console.log(new Date(data.dt*1000-(data.timezone*1000))); 
+    console.log(new Date(data.dt*1000+(data.timezone*1000)));
+
+    if(ErrThrow == 404){
+        //ErrTh.innerHTML = "No city/place Found"
+        window.alert("city/location Not Found")
+    }
+    placeName.innerHTML = CName
+    const tempOflocation = kToC(data.main.temp)
+    const minTempOfLocation = kToC(data.main.temp_min)
+    document.querySelector(".ImgForWeather").src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+    console.log(data.weather[0].icon)
+       DisplayTemp.innerText = `${tempOflocation}°C`
+       DisplayWeatherStatus.innerHTML = data.weather[0].description
+       humCal.innerHTML = `${data.main.humidity}%`
+       let convert = data.wind.speed
+       const mph = +((2.23694 *convert ).toFixed(2));
+       WindSpeed.innerHTML= `${mph} Mph`
+       Pressure.innerHTML = `${data.main.pressure}Hpa`
+
+}
+
+
+
 
 getData("nepal")
 
@@ -42,20 +76,28 @@ function kToC(K){
 
 btn.addEventListener("click", function(e) {
     e.preventDefault();
+    
 const city = input.value
-if(city){
+if(input.value ){
     getData(city)
     
 }
 input.value = "";
+
 })
 
 I.addEventListener("keyup", function(event){
+    event.preventDefault();
     if(event.key == "Enter"){
         getData(input.value)
-         input.value = ""
+        input.value = "";
     }
-   
+
 })
+
+
+
+ 
+
 
 
